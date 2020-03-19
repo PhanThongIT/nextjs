@@ -88,67 +88,10 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ({
-
-/***/ "./config.js":
-/*!*******************!*\
-  !*** ./config.js ***!
-  \*******************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _jsxFileName = "/home/ubuntu/Desktop/namlong/nextjs-app/config.js";
-
-var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
-const theme = {
-  primary: "#ffc600",
-  linkComments: [{
-    id: 0,
-    asLink: "first-comment",
-    content: __jsx("h2", {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 7
-      },
-      __self: undefined
-    }, "Hello First comment"),
-    href: "/post/[id]/[comment]"
-  }, {
-    id: 2,
-    asLink: "second-comment",
-    content: __jsx("h2", {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 13
-      },
-      __self: undefined
-    }, "Hello Second comment"),
-    href: "/post/[id]/[comment]"
-  }],
-  routers: [{
-    groupId: 0,
-    text: "Routing",
-    subRouters: [{
-      id: 0,
-      href: "/post/",
-      text: "Dynamic routers"
-    }, {
-      id: 1,
-      href: "/catch-all-routing/",
-      text: "Catch all routers"
-    }]
-  }]
-};
-/* harmony default export */ __webpack_exports__["default"] = (theme);
-
-/***/ }),
 
 /***/ "./node_modules/next/dist/next-server/lib/constants.js":
 /*!*************************************************************!*\
@@ -199,8 +142,6 @@ exports.ROUTE_NAME_REGEX = /^static[/\\][^/\\]+[/\\]pages[/\\](.*)\.js$/;
 exports.SERVERLESS_ROUTE_NAME_REGEX = /^pages[/\\](.*)\.js$/;
 exports.TEMPORARY_REDIRECT_STATUS = 307;
 exports.PERMANENT_REDIRECT_STATUS = 308;
-exports.STATIC_PROPS_ID = '__N_SSG';
-exports.SERVER_PROPS_ID = '__N_SSP';
 
 /***/ }),
 
@@ -512,6 +453,10 @@ function getOptionalModernScriptVariant(path) {
 
   return path;
 }
+
+function isLowPriority(file) {
+  return file.includes('_buildManifest');
+}
 /**
 * `Document` component handles the initial `document` markup and renders only on the server side.
 * Commonly used for implementing server side rendering for `css-in-js` libraries.
@@ -607,9 +552,6 @@ class Head extends _react.Component {
       assetPrefix,
       files
     } = this.context._documentProps;
-    const {
-      _devOnlyInvalidateCacheQueryString
-    } = this.context;
     const cssFiles = files && files.length ? files.filter(f => /\.css$/.test(f)) : [];
     const cssLinkElements = [];
     cssFiles.forEach(file => {
@@ -617,14 +559,14 @@ class Head extends _react.Component {
         key: `${file}-preload`,
         nonce: this.props.nonce,
         rel: "preload",
-        href: `${assetPrefix}/_next/${encodeURI(file)}${_devOnlyInvalidateCacheQueryString}`,
+        href: `${assetPrefix}/_next/${encodeURI(file)}`,
         as: "style",
         crossOrigin: this.props.crossOrigin || undefined
       }), _react.default.createElement("link", {
         key: file,
         nonce: this.props.nonce,
         rel: "stylesheet",
-        href: `${assetPrefix}/_next/${encodeURI(file)}${_devOnlyInvalidateCacheQueryString}`,
+        href: `${assetPrefix}/_next/${encodeURI(file)}`,
         crossOrigin: this.props.crossOrigin || undefined
       }));
     });
@@ -671,7 +613,10 @@ class Head extends _react.Component {
       // `dynamicImports` will contain both `.js` and `.module.js` when
       // the feature is enabled. This clause will filter down to the
       // modern variants only.
-      return file.endsWith(getOptionalModernScriptVariant('.js'));
+      //
+      // Also filter out low priority files because they should not be
+      // preloaded for performance reasons.
+      return file.endsWith(getOptionalModernScriptVariant('.js')) && !isLowPriority(file);
     }) : [];
     return preloadFiles.length === 0 ? null : preloadFiles.map(file => {
       return _react.default.createElement("link", {
@@ -919,14 +864,18 @@ class NextScript extends _react.Component {
   getScripts() {
     const {
       assetPrefix,
-      files,
-      lowPriorityFiles
+      files
     } = this.context._documentProps;
+
+    if (!files || files.length === 0) {
+      return null;
+    }
+
     const {
       _devOnlyInvalidateCacheQueryString
     } = this.context;
-    const normalScripts = files === null || files === void 0 ? void 0 : files.filter(file => file.endsWith('.js'));
-    const lowPriorityScripts = lowPriorityFiles === null || lowPriorityFiles === void 0 ? void 0 : lowPriorityFiles.filter(file => file.endsWith('.js'));
+    const normalScripts = files.filter(file => file.endsWith('.js') && !isLowPriority(file));
+    const lowPriorityScripts = files.filter(file => file.endsWith('.js') && isLowPriority(file));
     return [...normalScripts, ...lowPriorityScripts].map(file => {
       let modernProps = {};
 
@@ -1092,151 +1041,14 @@ const ESCAPE_LOOKUP={'&':'\\u0026','>':'\\u003e','<':'\\u003c','\u2028':'\\u2028
 
 /***/ }),
 
-/***/ "./node_modules/next/document.js":
+/***/ 2:
 /*!***************************************!*\
-  !*** ./node_modules/next/document.js ***!
+  !*** multi next/dist/pages/_document ***!
   \***************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! ./dist/pages/_document */ "./node_modules/next/dist/pages/_document.js")
-
-
-/***/ }),
-
-/***/ "./pages/_document.js":
-/*!****************************!*\
-  !*** ./pages/_document.js ***!
-  \****************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var next_document__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/document */ "./node_modules/next/document.js");
-/* harmony import */ var next_document__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_document__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! styled-components */ "styled-components");
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./config.js");
-var _jsxFileName = "/home/ubuntu/Desktop/namlong/nextjs-app/pages/_document.js";
-var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-
-
-
-
-
-class MyDocument extends next_document__WEBPACK_IMPORTED_MODULE_1___default.a {
-  static async getInitialProps({
-    renderPage
-  }) {
-    const sheet = new styled_components__WEBPACK_IMPORTED_MODULE_2__["ServerStyleSheet"]();
-    const page = renderPage(App => props => sheet.collectStyles(__jsx(App, _extends({}, props, {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 10
-      },
-      __self: this
-    }))));
-    const styleTags = sheet.getStyleElement();
-    return _objectSpread({}, page, {
-      styleTags
-    });
-  }
-
-  render() {
-    const {
-      styleTags
-    } = this.props;
-    return __jsx("html", {
-      lang: "en",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 24
-      },
-      __self: this
-    }, __jsx(next_document__WEBPACK_IMPORTED_MODULE_1__["Head"], {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 25
-      },
-      __self: this
-    }, __jsx("meta", {
-      charSet: "utf-8",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 26
-      },
-      __self: this
-    }), __jsx("meta", {
-      name: "viewport",
-      content: "initial-scale=1.0, width=device-width, viewport-fit=cover",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 27
-      },
-      __self: this
-    }), __jsx("link", {
-      rel: "manifest",
-      href: "/manifest.json",
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 31
-      },
-      __self: this
-    }), __jsx("meta", {
-      name: "theme-color",
-      content: _config__WEBPACK_IMPORTED_MODULE_3__["default"].primary,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 32
-      },
-      __self: this
-    }), styleTags), __jsx("body", {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 35
-      },
-      __self: this
-    }, __jsx(next_document__WEBPACK_IMPORTED_MODULE_1__["Main"], {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 36
-      },
-      __self: this
-    }), __jsx(next_document__WEBPACK_IMPORTED_MODULE_1__["NextScript"], {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 37
-      },
-      __self: this
-    })));
-  }
-
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (MyDocument);
-
-/***/ }),
-
-/***/ 1:
-/*!*********************************************!*\
-  !*** multi private-next-pages/_document.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! private-next-pages/_document.js */"./pages/_document.js");
+module.exports = __webpack_require__(/*! next/dist/pages/_document */"./node_modules/next/dist/pages/_document.js");
 
 
 /***/ }),
@@ -1260,17 +1072,6 @@ module.exports = require("prop-types");
 /***/ (function(module, exports) {
 
 module.exports = require("react");
-
-/***/ }),
-
-/***/ "styled-components":
-/*!************************************!*\
-  !*** external "styled-components" ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("styled-components");
 
 /***/ }),
 

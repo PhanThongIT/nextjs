@@ -1,1 +1,1 @@
-DEMO FRAMEWORK REACTJS - 
+Example of using Next.js with Redux

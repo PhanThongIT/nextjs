@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import _ from "lodash";
 import config from "../config";
 import Link from "next/link";
+import Counter from "../src/components/Counter";
 
 const routers = _.get(config, "routers");
 
@@ -35,7 +36,7 @@ const RenderGroup = (group, idxGroup) => {
           {!_.isEmpty(group.subRouters) &&
             _.map(group.subRouters, (router, index) => {
               return (
-                <li key={index}>
+                <li key={index} className={"btn btn-link"}>
                   <Link
                     href={_.get(router, "href")}
                     as={`${_.get(router, "href")}${_.get(router, "id")}`}

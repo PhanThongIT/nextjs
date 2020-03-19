@@ -4,13 +4,13 @@ const theme = {
     {
       id: 0,
       asLink: "first-comment",
-      content: <h2>Hello First comment</h2>,
+      content: <h2>Mework</h2>,
       href: "/post/[id]/[comment]"
     },
     {
       id: 2,
       asLink: "second-comment",
-      content: <h2>Hello Second comment</h2>,
+      content: <h2>Task detail</h2>,
       href: "/post/[id]/[comment]"
     }
   ],
@@ -28,6 +28,17 @@ const theme = {
           id: 1,
           href: "/catch-all-routing/",
           text: "Catch all routers"
+        }
+      ]
+    },
+    {
+      groupId: 1,
+      text: "Redux Example",
+      subRouters: [
+        {
+          id: 1,
+          href: "/counter/",
+          text: "Counter"
         }
       ]
     }

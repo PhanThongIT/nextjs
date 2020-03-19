@@ -93,67 +93,123 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
-/***/ "./config.js":
-/*!*******************!*\
-  !*** ./config.js ***!
-  \*******************/
-/*! exports provided: default */
+/***/ "./lib/with-redux-store.js":
+/*!*********************************!*\
+  !*** ./lib/with-redux-store.js ***!
+  \*********************************/
+/*! exports provided: withRedux */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withRedux", function() { return withRedux; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _jsxFileName = "/home/ubuntu/Desktop/namlong/nextjs-app/config.js";
-
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "react-redux");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _src_store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../src/store */ "./src/store.js");
+/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! next/app */ "./node_modules/next/app.js");
+/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(next_app__WEBPACK_IMPORTED_MODULE_3__);
+var _jsxFileName = "/home/ubuntu/Desktop/namlong/nextjs-app/lib/with-redux-store.js";
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
-const theme = {
-  primary: "#ffc600",
-  linkComments: [{
-    id: 0,
-    asLink: "first-comment",
-    content: __jsx("h2", {
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
+
+
+
+const withRedux = (PageComponent, {
+  ssr = true
+} = {}) => {
+  const WithRedux = (_ref) => {
+    let {
+      initialReduxState
+    } = _ref,
+        props = _objectWithoutProperties(_ref, ["initialReduxState"]);
+
+    const store = getOrInitializeStore(initialReduxState);
+    return __jsx(react_redux__WEBPACK_IMPORTED_MODULE_1__["Provider"], {
+      store: store,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 7
+        lineNumber: 10
       },
       __self: undefined
-    }, "Hello First comment"),
-    href: "/post/[id]/[comment]"
-  }, {
-    id: 2,
-    asLink: "second-comment",
-    content: __jsx("h2", {
+    }, __jsx(PageComponent, _extends({}, props, {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 13
+        lineNumber: 11
       },
       __self: undefined
-    }, "Hello Second comment"),
-    href: "/post/[id]/[comment]"
-  }],
-  routers: [{
-    groupId: 0,
-    text: "Routing",
-    subRouters: [{
-      id: 0,
-      href: "/post/",
-      text: "Dynamic routers"
-    }, {
-      id: 1,
-      href: "/catch-all-routing/",
-      text: "Catch all routers"
-    }]
-  }]
+    })));
+  }; // Make sure people don't use this HOC on _app.js level
+
+
+  if (true) {
+    const isAppHoc = PageComponent === next_app__WEBPACK_IMPORTED_MODULE_3___default.a || PageComponent.prototype instanceof next_app__WEBPACK_IMPORTED_MODULE_3___default.a;
+
+    if (isAppHoc) {
+      throw new Error("The withRedux HOC only works with PageComponents");
+    }
+  } // Set the correct displayName in development
+
+
+  if (true) {
+    const displayName = PageComponent.displayName || PageComponent.name || "Component";
+    WithRedux.displayName = `withRedux(${displayName})`;
+  }
+
+  if (ssr || PageComponent.getInitialProps) {
+    WithRedux.getInitialProps = async context => {
+      // Get or Create the store with `undefined` as initialState
+      // This allows you to set a custom default initialState
+      const reduxStore = getOrInitializeStore(); // Provide the store to getInitialProps of pages
+
+      context.reduxStore = reduxStore; // Run getInitialProps from HOCed PageComponent
+
+      const pageProps = typeof PageComponent.getInitialProps === "function" ? await PageComponent.getInitialProps(context) : {}; // Pass props to PageComponent
+
+      return _objectSpread({}, pageProps, {
+        initialReduxState: reduxStore.getState()
+      });
+    };
+  }
+
+  return WithRedux;
 };
-/* harmony default export */ __webpack_exports__["default"] = (theme);
+let reduxStore;
+
+const getOrInitializeStore = initialState => {
+  // Always make a new store if server, otherwise state is shared between requests
+  if (true) {
+    return Object(_src_store__WEBPACK_IMPORTED_MODULE_2__["default"])(initialState);
+  } // Create store if unavailable on the client and set it on the window object
+
+
+  if (!reduxStore) {
+    reduxStore = Object(_src_store__WEBPACK_IMPORTED_MODULE_2__["default"])(initialState);
+  }
+
+  return reduxStore;
+};
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/interopRequireDefault.js ***!
-  \**********************************************************************/
+/***/ "./node_modules/@babel/runtime-corejs2/helpers/interopRequireDefault.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/helpers/interopRequireDefault.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -324,7 +380,7 @@ exports.ST = exports.SP && typeof performance.mark === 'function' && typeof perf
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime-corejs2/helpers/interopRequireDefault */ "./node_modules/@babel/runtime-corejs2/helpers/interopRequireDefault.js");
 
 exports.__esModule = true;
 exports.Container = Container;
@@ -364,15 +420,12 @@ class App extends _react.default.Component {
     var {
       router,
       Component,
-      pageProps,
-      __N_SSG,
-      __N_SSP
+      pageProps
     } = this.props;
-    return _react.default.createElement(Component, Object.assign({}, pageProps, // we don't add the legacy URL prop if it's using non-legacy
-    // methods like getStaticProps and getServerSideProps
-    !(__N_SSG || __N_SSP) ? {
-      url: createUrl(router)
-    } : {}));
+    var url = createUrl(router);
+    return _react.default.createElement(Component, Object.assign({}, pageProps, {
+      url: url
+    }));
   }
 
 }
@@ -459,15 +512,13 @@ function createUrl(router) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/app */ "./node_modules/next/app.js");
-/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_app__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! styled-components */ "styled-components");
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(styled_components__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./config.js");
+/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! next/app */ "./node_modules/next/app.js");
+/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(next_app__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _src_components_Layout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../src/components/Layout */ "./src/components/Layout.js");
 var _jsxFileName = "/home/ubuntu/Desktop/namlong/nextjs-app/pages/_app.js";
-var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+var __jsx = react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement;
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -475,70 +526,166 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
-styled_components__WEBPACK_IMPORTED_MODULE_2__["createGlobalStyle"]`
-  html {
-    font-size: 10px;
-    box-sizing: border-box;
-  }
-
-  *,
-  *::before,
-  *::after {
-    box-sizing: inherit;
-    margin: 0;
-  }
-
-  body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  }
-`;
-
-class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_1___default.a {
-  static async getInitialProps({
-    Component,
-    ctx
-  }) {
-    let pageProps = {};
-
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    return {
-      pageProps
-    };
-  }
-
+class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_0___default.a {
   render() {
     const {
       Component,
       pageProps
     } = this.props;
-    return __jsx(next_app__WEBPACK_IMPORTED_MODULE_1__["Container"], {
+    return __jsx(_src_components_Layout__WEBPACK_IMPORTED_MODULE_2__["default"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 39
-      },
-      __self: this
-    }, __jsx(styled_components__WEBPACK_IMPORTED_MODULE_2__["ThemeProvider"], {
-      theme: _config__WEBPACK_IMPORTED_MODULE_3__["default"],
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 40
+        lineNumber: 9
       },
       __self: this
     }, __jsx(Component, _extends({}, pageProps, {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 41
+        lineNumber: 10
       },
       __self: this
-    }))));
+    })));
   }
 
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (MyApp);
+
+/***/ }),
+
+/***/ "./src/actions/types.js":
+/*!******************************!*\
+  !*** ./src/actions/types.js ***!
+  \******************************/
+/*! exports provided: INCREMENT, DECREMENT, RESET */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "INCREMENT", function() { return INCREMENT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECREMENT", function() { return DECREMENT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RESET", function() { return RESET; });
+const INCREMENT = "INCREMENT";
+const DECREMENT = "DECREMENT";
+const RESET = "RESET";
+
+/***/ }),
+
+/***/ "./src/components/Layout.js":
+/*!**********************************!*\
+  !*** ./src/components/Layout.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_with_redux_store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../lib/with-redux-store */ "./lib/with-redux-store.js");
+var _jsxFileName = "/home/ubuntu/Desktop/namlong/nextjs-app/src/components/Layout.js";
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+function Layout({
+  children
+}) {
+  return __jsx("div", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 5
+    },
+    __self: this
+  }, children);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(_lib_with_redux_store__WEBPACK_IMPORTED_MODULE_1__["withRedux"])(Layout));
+
+/***/ }),
+
+/***/ "./src/reducers/counterReducer.js":
+/*!****************************************!*\
+  !*** ./src/reducers/counterReducer.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/types */ "./src/actions/types.js");
+
+const initialState = {
+  counter: 0
+};
+/* harmony default export */ __webpack_exports__["default"] = (function (state = initialState, action) {
+  switch (action.type) {
+    case _actions_types__WEBPACK_IMPORTED_MODULE_0__["INCREMENT"]:
+      return {
+        counter: state.counter + 1
+      };
+
+    case _actions_types__WEBPACK_IMPORTED_MODULE_0__["DECREMENT"]:
+      return {
+        counter: state.counter - 1
+      };
+
+    case _actions_types__WEBPACK_IMPORTED_MODULE_0__["RESET"]:
+      return {
+        counter: 0
+      };
+
+    default:
+      return state;
+  }
+});
+
+/***/ }),
+
+/***/ "./src/reducers/index.js":
+/*!*******************************!*\
+  !*** ./src/reducers/index.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "redux");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(redux__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _counterReducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./counterReducer */ "./src/reducers/counterReducer.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
+  counterReducer: _counterReducer__WEBPACK_IMPORTED_MODULE_1__["default"]
+}));
+
+/***/ }),
+
+/***/ "./src/store.js":
+/*!**********************!*\
+  !*** ./src/store.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return initializeStore; });
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "redux");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(redux__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var redux_devtools_extension__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! redux-devtools-extension */ "redux-devtools-extension");
+/* harmony import */ var redux_devtools_extension__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(redux_devtools_extension__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var redux_thunk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! redux-thunk */ "redux-thunk");
+/* harmony import */ var redux_thunk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(redux_thunk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _src_reducers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../src/reducers */ "./src/reducers/index.js");
+
+
+
+
+function initializeStore(initialState = {}) {
+  return Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(_src_reducers__WEBPACK_IMPORTED_MODULE_3__["default"], initialState, Object(redux_devtools_extension__WEBPACK_IMPORTED_MODULE_1__["composeWithDevTools"])(Object(redux__WEBPACK_IMPORTED_MODULE_0__["applyMiddleware"])(redux_thunk__WEBPACK_IMPORTED_MODULE_2___default.a)));
+}
 
 /***/ }),
 
@@ -565,14 +712,47 @@ module.exports = require("react");
 
 /***/ }),
 
-/***/ "styled-components":
-/*!************************************!*\
-  !*** external "styled-components" ***!
-  \************************************/
+/***/ "react-redux":
+/*!******************************!*\
+  !*** external "react-redux" ***!
+  \******************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = require("styled-components");
+module.exports = require("react-redux");
+
+/***/ }),
+
+/***/ "redux":
+/*!************************!*\
+  !*** external "redux" ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("redux");
+
+/***/ }),
+
+/***/ "redux-devtools-extension":
+/*!*******************************************!*\
+  !*** external "redux-devtools-extension" ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("redux-devtools-extension");
+
+/***/ }),
+
+/***/ "redux-thunk":
+/*!******************************!*\
+  !*** external "redux-thunk" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("redux-thunk");
 
 /***/ }),
 

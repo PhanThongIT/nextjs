@@ -1,7 +1,11 @@
 import React from "react";
 
-function About() {
-  return <div>This is about page</div>;
+function about() {
+  return (
+    <div>
+      <h1>static page with redux</h1>
+    </div>
+  );
 }
 
-export default About;
+export default about;
