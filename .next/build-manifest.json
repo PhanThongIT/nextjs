@@ -20,15 +20,11 @@
       "static/runtime/polyfills.js",
       "static/runtime/polyfills.js.map"
     ],
-    "/next/dist/pages/_error": [
+    "/catch-all-routing/[...params]": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
     "/post/[id]": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
-    "/post/[id]/[comment]": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]

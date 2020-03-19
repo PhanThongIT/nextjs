@@ -8,6 +8,7 @@ const linkComments = _.get(config, "linkComments");
 const Post = () => {
   const router = useRouter();
   const { id } = router.query;
+  console.log("Router object: ", router);
 
   return (
     <>

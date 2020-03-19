@@ -38,6 +38,19 @@ var theme = {
       __self: undefined
     }, "Hello Second comment"),
     href: "/post/[id]/[comment]"
+  }],
+  routers: [{
+    groupId: 0,
+    text: "Routing",
+    subRouters: [{
+      id: 0,
+      href: "/post/",
+      text: "Dynamic routers"
+    }, {
+      id: 1,
+      href: "/catch-all-routing/",
+      text: "Catch all routers"
+    }]
   }]
 };
 /* harmony default export */ __webpack_exports__["default"] = (theme);
@@ -21531,16 +21544,17 @@ var linkComments = lodash__WEBPACK_IMPORTED_MODULE_4___default.a.get(_config__WE
 var Post = function Post() {
   var router = Object(next_router__WEBPACK_IMPORTED_MODULE_1__["useRouter"])();
   var id = router.query.id;
+  console.log("Router object: ", router);
   return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx("h1", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 14
+      lineNumber: 15
     },
     __self: this
   }, "Post: ", id), __jsx("ul", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 15
+      lineNumber: 16
     },
     __self: this
   }, _renderLinkComment(id)));
@@ -21553,7 +21567,7 @@ var _renderLinkComment = function _renderLinkComment(id) {
         key: index,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 24
+          lineNumber: 25
         },
         __self: this
       }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
@@ -21561,7 +21575,7 @@ var _renderLinkComment = function _renderLinkComment(id) {
         as: "/post/".concat(id, "/").concat(lodash__WEBPACK_IMPORTED_MODULE_4___default.a.get(item, "asLink")),
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 25
+          lineNumber: 26
         },
         __self: this
       }, lodash__WEBPACK_IMPORTED_MODULE_4___default.a.get(item, "content")));

@@ -13,6 +13,24 @@ const theme = {
       content: <h2>Hello Second comment</h2>,
       href: "/post/[id]/[comment]"
     }
+  ],
+  routers: [
+    {
+      groupId: 0,
+      text: "Routing",
+      subRouters: [
+        {
+          id: 0,
+          href: "/post/",
+          text: "Dynamic routers"
+        },
+        {
+          id: 1,
+          href: "/catch-all-routing/",
+          text: "Catch all routers"
+        }
+      ]
+    }
   ]
 };
 

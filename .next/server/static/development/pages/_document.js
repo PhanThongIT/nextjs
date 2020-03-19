@@ -131,6 +131,19 @@ const theme = {
       __self: undefined
     }, "Hello Second comment"),
     href: "/post/[id]/[comment]"
+  }],
+  routers: [{
+    groupId: 0,
+    text: "Routing",
+    subRouters: [{
+      id: 0,
+      href: "/post/",
+      text: "Dynamic routers"
+    }, {
+      id: 1,
+      href: "/catch-all-routing/",
+      text: "Catch all routers"
+    }]
   }]
 };
 /* harmony default export */ __webpack_exports__["default"] = (theme);
